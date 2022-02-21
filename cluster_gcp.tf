@@ -10,6 +10,15 @@ resource "google_container_cluster" "idling_cr_cluster" {
   project                  = local.project
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  addons_config {
+    network_policy_config {
+      disabled = false
+    }
+  }
+  network_policy {
+    enabled = true
+  }
 }
 
 resource "google_container_node_pool" "idling_cr_cluster_nodes" {
@@ -18,7 +27,6 @@ resource "google_container_node_pool" "idling_cr_cluster_nodes" {
   project    = local.project
   cluster    = google_container_cluster.idling_cr_cluster.name
   node_count = local.cluster_node_count
-
 
   node_config {
     preemptible  = true
